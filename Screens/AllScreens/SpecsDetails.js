@@ -13,17 +13,38 @@ import { Colors } from "../../Colors";
 import axios from "axios";
 import { SCREEN_HEIGHT } from "../../ScreenSize";
 import AntDesign from "@expo/vector-icons/AntDesign";
-const SpecsDetails = ({ route }) => {
+import { FlatList } from "react-native-gesture-handler";
+const SpecsDetails = ({ route, navigation }) => {
   const { metadata } = route.params;
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const RequestBody = {
-    route: "device-detail",
-    key: metadata.key,
-  };
 
-  const fetchData = async () => {
+  const fetchData = async (key) => {
     try {
+      const RequestBody = {
+        route: "device-detail",
+        key: metadata.key || key,
+      };
+      const res = await axios.post(
+        "https://script.google.com/macros/s/AKfycbxNu27V2Y2LuKUIQMK8lX1y0joB6YmG6hUwB1fNeVbgzEh22TcDGrOak03Fk3uBHmz-/exec",
+        RequestBody
+      );
+      if (res.status == 200) {
+        setData(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchData2 = async (key) => {
+    try {
+      setIsLoading(true);
+      const RequestBody = {
+        route: "device-detail",
+        key: key,
+      };
       const res = await axios.post(
         "https://script.google.com/macros/s/AKfycbxNu27V2Y2LuKUIQMK8lX1y0joB6YmG6hUwB1fNeVbgzEh22TcDGrOak03Fk3uBHmz-/exec",
         RequestBody
@@ -42,11 +63,28 @@ const SpecsDetails = ({ route }) => {
     fetchData();
   }, []);
 
-  // console.log(data.more_specification[0].title);
+  const handleMoreDevicePress = (key) => {
+    fetchData2(key);
+  };
+
+  const RenderItem = ({ data }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => handleMoreDevicePress(data.key)}
+        style={styles.FlatListItemBtn}
+      >
+        <Image
+          source={{ uri: data.device_image }}
+          style={styles.FlatlistImage}
+        />
+        <Text style={styles.FlatListitemTitle}>{data.device_name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.innerContainer}>
         {isLoading && (
           <View style={styles.activityIndicatorWrapper}>
             <ActivityIndicator
@@ -58,7 +96,7 @@ const SpecsDetails = ({ route }) => {
         )}
         {!isLoading && (
           <View style={styles.sectionListWrapper}>
-            {!isLoading && data.more_specification.length > 0 && (
+            {!isLoading && data?.more_specification.length > 0 && (
               <SectionList
                 ListHeaderComponent={() => {
                   return (
@@ -68,25 +106,34 @@ const SpecsDetails = ({ route }) => {
                         style={styles.deviceImage}
                       />
                       <View style={styles.imageHeadingRightWrapper}>
-                        <Text style={styles.DevceNameHeading}>
-                          {data?.device_name}
-                        </Text>
-                        <Text style={styles.DevceTempDetails}>
-                          Battery: {data?.battery}
-                        </Text>
-                        <Text style={styles.DevceTempDetails}>
-                          Camera: {data?.camera}
-                        </Text>
-                        <Text style={styles.DevceTempDetails}>
-                          Dispay Size: {data?.display_size}
-                        </Text>
-                        <Text style={styles.DevceTempDetails}>
-                          Chipset: {data?.chipset}
-                        </Text>
+                        <View>
+                          <Text style={styles.DevceNameHeading}>
+                            {data?.device_name}
+                          </Text>
+                          <Text style={styles.DevceTempDetails}>
+                            Battery: {data?.battery}
+                          </Text>
+                          <Text style={styles.DevceTempDetails}>
+                            Camera: {data?.camera}
+                          </Text>
+                          <Text style={styles.DevceTempDetails}>
+                            Dispay Size: {data?.display_size}
+                          </Text>
+                          <Text style={styles.DevceTempDetails}>
+                            Chipset: {data?.chipset}
+                          </Text>
+                        </View>
 
-                        <TouchableOpacity style={styles.MoreImagesButton}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("ImagesScreen", {
+                              imagesArray: data?.pictures,
+                            })
+                          }
+                          style={styles.MoreImagesButton}
+                        >
                           <Text style={styles.MoreImagesButtonText}>
-                            More Pics{" "}
+                            More Images
                           </Text>
                           <AntDesign
                             name="arrowright"
@@ -98,7 +145,7 @@ const SpecsDetails = ({ route }) => {
                     </View>
                   );
                 }}
-                sections={data.more_specification}
+                sections={data?.more_specification}
                 keyExtractor={(item, index) => item.key + "_" + index}
                 renderItem={({ item }) => {
                   return (
@@ -121,6 +168,38 @@ const SpecsDetails = ({ route }) => {
                 renderSectionHeader={({ section: { title } }) => (
                   <Text style={styles.itemSpecsHeader}>{title}</Text>
                 )}
+                ListFooterComponent={() => {
+                  return (
+                    <View>
+                      <View>
+                        <Text style={styles.MoreMobileHeading}>
+                          {data.key && Object.keys(data.more_information)[0]}
+                        </Text>
+                        <FlatList
+                          horizontal
+                          maxToRenderPerBatch={5}
+                          data={
+                            data.key && Object.values(data.more_information)[0]
+                          }
+                          renderItem={({ item }) => <RenderItem data={item} />}
+                        />
+                      </View>
+                      <View>
+                        <Text style={styles.MoreMobileHeading}>
+                          {data.key && Object.keys(data.more_information)[1]}
+                        </Text>
+                        <FlatList
+                          horizontal
+                          maxToRenderPerBatch={5}
+                          data={
+                            data.key && Object.values(data.more_information)[1]
+                          }
+                          renderItem={({ item }) => <RenderItem data={item} />}
+                        />
+                      </View>
+                    </View>
+                  );
+                }}
               />
             )}
           </View>
@@ -137,6 +216,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.BLACK,
     flex: 1,
     padding: 10,
+  },
+  innerContainer: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
   },
   activityIndicatorWrapper: {
     display: "flex",
@@ -167,6 +251,7 @@ const styles = StyleSheet.create({
     width: "50%",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-between",
   },
   MoreImagesButton: {
     alignSelf: "flex-start",
@@ -178,6 +263,7 @@ const styles = StyleSheet.create({
   },
   MoreImagesButtonText: {
     color: Colors.ORANGE,
+    fontSize: 20,
   },
   DevceNameHeading: {
     color: Colors.ORANGE,
@@ -211,60 +297,26 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
     fontWeight: "900",
   },
-});
-
-const da = {
-  battery: "5000mAh",
-  batteryType: "18W",
-  body: "8.2mm thickness",
-  camera: "50MP",
-  chipset: "Snapdragon 4s Gen 2",
-  comment: "Preliminary unofficial specifications",
-  device_image: "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-redmi-14r.jpg",
-  device_name: "Xiaomi Redmi A4",
-  display_res: "1080x2400 pixels",
-  display_size: '6.7"',
-  key: "xiaomi_redmi_a4-13444",
-  more_information: {
-    "Popular from Xiaomi": [
-      [Object],
-      [Object],
-      [Object],
-      [Object],
-      [Object],
-      [Object],
-    ],
-    "Related Devices": [
-      [Object],
-      [Object],
-      [Object],
-      [Object],
-      [Object],
-      [Object],
-    ],
+  MoreMobileHeading: {
+    color: Colors.ORANGE,
+    marginTop: 20,
+    fontSize: 24,
   },
-  more_specification: [
-    { data: [Array], title: "Network" },
-    { data: [Array], title: "Launch" },
-    { data: [Array], title: "Body" },
-    { data: [Array], title: "Display" },
-    { data: [Array], title: "Platform" },
-    { data: [Array], title: "Memory" },
-    { data: [Array], title: "Main Camera" },
-    { data: [Array], title: "Selfie camera" },
-    { data: [Array], title: "Sound" },
-    { data: [Array], title: "Comms" },
-    { data: [Array], title: "Features" },
-    { data: [Array], title: "Battery" },
-    { data: [Array], title: "Misc" },
-  ],
-  os_type: "Android 14, HyperOS",
-  pictures: [
-    "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-redmi-a4-5g-11.jpg",
-  ],
-  prices: {},
-  ram: "8GB RAM",
-  release_date: "Exp. release 2024, November",
-  storage: "128GB storage, microSDXC",
-  video: "1080p",
-};
+  FlatListItemBtn: {
+    marginHorizontal: 5,
+    flexDirection: "column",
+    alignItems: "center",
+    width: 100,
+    padding: 5,
+  },
+  FlatListitemTitle: {
+    color: Colors.WHITE,
+  },
+  FlatlistImage: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    backgroundColor: Colors.WHITE,
+    borderRadius: 10,
+  },
+});

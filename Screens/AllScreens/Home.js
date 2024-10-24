@@ -22,6 +22,8 @@ const Home = ({ navigation }) => {
       const res = await axios.get(
         "https://script.google.com/macros/s/AKfycbxNu27V2Y2LuKUIQMK8lX1y0joB6YmG6hUwB1fNeVbgzEh22TcDGrOak03Fk3uBHmz-/exec?route=recommended"
       );
+      console.log(res.data);
+      
       if (res.status == 200) {
         const sections = Object.keys(res.data.data).map((key) => ({
           title: res.data.data[key].title,
@@ -49,7 +51,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View>
-        {/* <TextInput placeholder="Search" style={styles.SearchTextInput} /> */}
+       
         {
         isLoading && 
         <View style={styles.activityIndicatorWrapper}>
@@ -143,15 +145,7 @@ const styles = StyleSheet.create({
 
    
   },
-  SearchTextInput: {
-    width: SCREEN_WIDTH - 50,
-    height: 40,
-    backgroundColor: Colors.WHITE,
-    borderRadius: 50,
-    paddingHorizontal: 20,
-    alignSelf: "center",
-    marginTop: 10,
-  },
+
   HomeItemheader: {
     color: Colors.ORANGE,
     fontSize: 22,

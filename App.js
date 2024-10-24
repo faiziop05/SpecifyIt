@@ -10,39 +10,38 @@ import { Button, View } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { Home, Welcome, SpecsDetails } from "./Screens";
+import { Home, Welcome, SpecsDetails ,ImagesScreen,SearchMobileScreen, BrandMobiles} from "./Screens";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MyStack = () => {
   return (
     <NavigationContainer>
+
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: Colors.DARK_BLUE },
           headerTintColor: Colors.WHITE,
-          headerTitleStyle: { fontWeight: "bold" },
+          headerTitleStyle: { fontWeight: "bold" ,fontSize:22},
+          headerBackTitleVisible:false,
           headerTitleAlign: "center",
           headerShadowVisible: false, // Hides the shadow line below the header
           headerBackgroundContainerStyle: { backgroundColor: Colors.DARK_BLUE },
-          headerRight: () => (
-            <TouchableOpacity style={{ marginRight: 10, padding: 5 }}>
-              <MaterialIcons name="favorite" size={24} color={Colors.ORANGE} />
-            </TouchableOpacity>
-          ),
         }}
-      >
+        >
         <Stack.Screen
           name="Welcome"
           options={{ headerShown: false }}
           component={Welcome}
-        />
+          />
         <Stack.Screen name="SpecsDetails" component={SpecsDetails} options={{ title: "Specifications" }}/>
+        <Stack.Screen name="ImagesScreen" component={ImagesScreen} options={{ title: "Images" }}/>
+        <Stack.Screen name="BrandMobiles" component={BrandMobiles} options={{ title: "Mobiles" }}/>
         <Stack.Screen
           name="MyTabs"
           component={MyTabs}
           options={{ title: "Home", headerLeft:false }}
-        />
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -74,6 +73,20 @@ function MyTabs() {
           tabBarIcon: ({ focused }) => (
             <Feather
               name="home"
+              size={24}
+              color={focused ? Colors.ORANGE : Colors.GRAY}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="SearchMobileScreen"
+        component={SearchMobileScreen}
+        options={{
+          title:"Search",
+          tabBarIcon: ({ focused }) => (
+            <Feather
+              name="search"
               size={24}
               color={focused ? Colors.ORANGE : Colors.GRAY}
             />
