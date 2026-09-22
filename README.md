@@ -1,86 +1,46 @@
-# SpecifyIt App
+# SpecifyIt
 
-SpecifyIt is a mobile application built using React Native and the GSM Arena API to explore the specifications of various mobile phones, smartwatches, and tablets. It offers an intuitive way for users to check specifications, compare devices, and browse through the latest tech gadgets. The app implements pagination for smooth data loading and uses React Navigation for seamless transitions between screens.
+A React Native app for browsing and comparing mobile phone, smartwatch, and tablet specifications.
 
-## 🖼 Screenshots
+## Overview
 
-| Welcome                                     | Home                                      | Daily Interests                            | Search                                     |
-|---------------------------------------------|-------------------------------------------|--------------------------------------------|--------------------------------------------|
-| ![Welcome Screen](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2244.png) | ![Home Screen](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2245.png) | ![Daily Interests](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2246.png) |![Search](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2247.png) |
+SpecifyIt lets users explore detailed technical specifications for mobiles, smartwatches, and tablets, sourced from the GSM Arena API. It supports paginated browsing of devices, a search flow, and a "related devices" view so users can compare similar products without leaving the app.
 
-| Mobiles                                     | Specifications                            | Related Devices                            | Images                                     |       
-|---------------------------------------------|-------------------------------------------|--------------------------------------------|--------------------------------------------|
-| ![Mobiles](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2248.png) | ![Specifications](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2249.png) | ![Related Devices](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2250.png) | ![Images](https://github.com/faiziop05/SpecifyIt/blob/main/UI%20Images/IMG_2251.png) 
+## Problem it solves
 
+Looking up and comparing device specs usually means digging through a desktop-oriented website. SpecifyIt packages that data into a mobile-first browsing experience with pagination and navigation built for quick lookups on the go.
 
-## 📜 Features
+## Key features
 
-- 📱 **Device Specifications:** View detailed specs for mobiles, smartwatches, and tablets.
-- 🔍 **Device Exploration:** Browse and explore the latest tech gadgets.
-- 🔄 **Pagination:** Efficient pagination for smooth browsing and loading of data.
-- 🔍 **Smooth Navigation:** Utilizes React Navigation for seamless app transitions.
-- 📡 **GSM Arena AP:** Fetch device data and specifications from an open-source API for reliable information.
+- **Device specification browsing** — detailed spec pages for mobiles, smartwatches, and tablets.
+- **Paginated device listing** — efficient, incremental loading instead of dumping the full catalog at once.
+- **Search** — a dedicated search screen for finding specific devices.
+- **Related devices** — surfaces similar/related products from a device's detail page.
+- **Image galleries** — dedicated image views per device.
+- **Bottom-tab + stack navigation** — combines `@react-navigation/bottom-tabs` and `@react-navigation/stack` for a native app-like navigation structure.
 
-## 🛠 Packages Used
+## What's unique about it
 
-Here’s a list of major packages and technologies used in the app:
+- It's built entirely on top of the third-party GSM Arena API via Axios, rather than a bundled/static dataset, so device data reflects the live source.
+- Screens are organized under a single `Screens/AllScreens` module with a central `Screens/index.js` export, keeping navigation wiring and screen implementations cleanly separated.
 
-- **React Native**: `react-native 0.74.5`
-- **Expo**: `expo 51.0.28`
-- **React Navigation**: `@react-navigation/native 6.1.18`, `@react-navigation/bottom-tabs 6.6.1`, `@react-navigation/stack 6.4.1`
-- **Axios:** Used for API calls to fetch mobile device data.
+## Tech stack
 
-## 🚀 Installation and Setup
+- **React Native** (0.74) with **Expo** (^51)
+- **React Navigation** (bottom tabs, native, stack)
+- **Axios** for API calls to the GSM Arena data source
+- **expo-linear-gradient**, **react-native-reanimated**, **react-native-gesture-handler** for UI/animation
 
-To get a local copy of the project up and running, follow these steps:
+## Setup / running instructions
 
-### Prerequisites
-
-- Ensure that you have **npm** installed on your machine.
-- Install **Expo CLI** globally if you haven’t already:
-  ```bash
-  npm install -g expo-cli
-## Installation
-- Clone the project files
-Navigate into the project directory:
 ```bash
-  cd SpecifyIt
+npm install
+npm start
 ```
-Install the required dependencies:
-```bash
-  npm install
-```
-Start the Expo development server:
-```bash
-  npm start
-```
-## Running the App
-You can run the app on different platforms:
 
-Android:
+Run on a specific platform:
 ```bash
-  npm run android
-```
-iOS (only on macOS):
-```bash
-  npm run ios
-```
-Web:
-```bash
+npm run android
+npm run ios
 npm run web
 ```
-## Building the App
-For a production-ready build, you can use Expo’s build tools:
-```bash
-  expo build:android
-  expo build:ios
-```
-## 🤝 Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue.
-
-## 📧 Contact
-If you have any questions or suggestions, feel free to contact me:
-
-Email: faizanhanif369@gmail.com
-
-© 2024 Faizan Hanif
